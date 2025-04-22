@@ -17,6 +17,9 @@ dependencies = [
     "matplotlib>=3.10.0",
     "statsmodels>=0.14.4",
 ]
+authors = [
+  {name = "Yohaï-Eliel Berreby", email = "me@yberreby.com"},
+]
 
 [build-system]
 requires = ["hatchling"]
