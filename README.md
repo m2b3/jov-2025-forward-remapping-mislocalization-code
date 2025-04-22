@@ -20,8 +20,8 @@ Once you have `uv` installed:
 
 ```bash
 # Clone the repo
-git clone https://github.com/m2b3/jov-2025-forward-remapping-mislocalization-paper-code.git
-cd jov-2025-forward-remapping-mislocalization-paper-code
+git clone https://github.com/m2b3/jov-2025-forward-remapping-mislocalization-code.git
+cd jov-2025-forward-remapping-mislocalization-code
 
 # Install dependencies
 # You do _not_ need to explicitly (de)activate the venv,
