@@ -43,7 +43,7 @@ notable_onset_times = [
     250,
 ]
 
-
+N_SAMPLED_ONSETS = 1001
 def flash_onset_times(notable_only=True) -> jax.Array:
-    times = notable_onset_times if notable_only else jnp.linspace(-250, 250, 401)
+    times = notable_onset_times if notable_only else jnp.linspace(-250, 250, N_SAMPLED_ONSETS)
     return jnp.array(times)
