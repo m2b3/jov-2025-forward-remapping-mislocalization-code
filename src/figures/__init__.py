@@ -1,2 +1,2 @@
 import matplotlib.pyplot as plt
-plt.rcParams['figure.dpi'] = 150
+plt.rcParams['figure.dpi'] = 300
