@@ -111,7 +111,7 @@ def export_all_parameters(simulator, figures, out_dir=None):
 
 
 def export_all_figures(figures: Dict[str, BaseFigure], out_dir: Path, formats=None):
-    formats = formats or ["svg", "pdf", "png"]
+    formats = formats or ["svg", "pdf", "png", "eps"]
     fig_dir = out_dir / "figures"
     fig_dir.mkdir(exist_ok=True)
 
