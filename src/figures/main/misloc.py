@@ -14,8 +14,8 @@ from ..base import BaseFigure
 from ..labels import report_horiz_pos_label, flash_onset_from_sac_onset_label
 
 
-
-fat_line_width = 3
+marker_width = 2 * 0.8
+fat_line_width = 2 * 3
 
 def compute_bootstrap_ci(x, y, n_bootstraps=1000, frac=0.15, it=3):
     """Compute bootstrap confidence intervals for LOWESS smoothed data.
@@ -48,20 +48,23 @@ def compute_bootstrap_ci(x, y, n_bootstraps=1000, frac=0.15, it=3):
     return ci_lower, ci_upper
 
 class MislocFig(BaseFigure):
-    def __init__(self, sim, *, notable_only=True, **kw):
+    def __init__(self, sim, *, notable_only=True, show_legend=True, show_individual=True, show_confidence=True, **kw):
+        self.show_legend = show_legend
+        self.show_individual = show_individual
+        self.show_confidence = show_confidence
         self.notable_only = notable_only
         self.onsets = flash_onset_times(notable_only=notable_only)
         self.series_data, (self.x_agg, self.y_agg) = load_honda_data()
         super().__init__(sim, **kw)
 
     def create_figure(self) -> Figure:
-        fig = plt.figure(figsize=(fig_width, 6))
+        fig = plt.figure(figsize=(6, 6))
         self.ax = fig.add_subplot(111)
 
         self.ax.set_xlabel(flash_onset_from_sac_onset_label, **grid_axis_label_kw)
         self.ax.set_ylabel(report_horiz_pos_label, **grid_axis_label_kw)
-        self.ax.axhline(y=0, **saccade_start_vline_kw)
-        sac_start(self.ax)
+        self.ax.axhline(y=0, lw=marker_width, **saccade_start_vline_kw)
+        sac_start(self.ax, lw=marker_width)
 
         return fig
 
@@ -73,25 +76,28 @@ class MislocFig(BaseFigure):
         color_cycle = itertools.cycle(default_colors)
 
         raw_lines = []
-        for series in self.series_data:
-            paper = cast(str, series.get('paper', '?'))
-            extra_kw = dict()
-            # Assign a new color, and label (ONLY ONCE) if we haven't seen this paper before.
-            if paper not in paper_color:
-                paper_color[paper] = next(color_cycle)
-                extra_kw: dict = dict(label=paper)
-            line = standard_plot(
-                self.ax,
-                color=paper_color[paper],
-                alpha=0.3,
-                marker='o',
-                markersize=3,
-                **extra_kw
-            )
-            line.set_data(series['x'], series['y'])
-            raw_lines.append(line)
 
-        self.ax.legend()
+        if self.show_individual:
+            for series in self.series_data:
+                paper = cast(str, series.get('paper', '?'))
+                extra_kw = dict()
+                # Assign a new color, and label (ONLY ONCE) if we haven't seen this paper before.
+                if paper not in paper_color:
+                    paper_color[paper] = next(color_cycle)
+                    extra_kw: dict = dict(label=paper)
+                line = standard_plot(
+                    self.ax,
+                    color=paper_color[paper],
+                    alpha=0.3,
+                    marker='o',
+                    markersize=3,
+                    **extra_kw
+                )
+                line.set_data(series['x'], series['y'])
+                raw_lines.append(line)
+
+        if self.show_legend:
+            self.ax.legend()
 
 
         # Overall smooth trend
@@ -101,7 +107,7 @@ class MislocFig(BaseFigure):
 
         # Model prediction line and end marker
         model_line = standard_plot(self.ax, linewidth=fat_line_width)
-        sac_end_line = sac_end(self.ax)
+        sac_end_line = sac_end(self.ax, lw=marker_width)
 
         # Compute confidence intervals
         ci_lower, ci_upper = compute_bootstrap_ci(self.x_agg, self.y_agg)
@@ -111,6 +117,15 @@ class MislocFig(BaseFigure):
             smooth[:,0], ci_lower, ci_upper,
             color='red', alpha=0.2
         )
+
+        if not self.show_confidence:
+            confidence_fill.set_visible(False)
+
+
+        # Make all spines thicker
+        for spine in self.ax.spines.values():
+            spine.set_linewidth(marker_width)
+
 
         return {
             "model_line": model_line,

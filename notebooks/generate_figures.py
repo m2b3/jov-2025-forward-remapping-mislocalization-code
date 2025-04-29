@@ -28,8 +28,9 @@ sys.path.insert(0, "..")  # Add the project root to the path
 # %matplotlib widget
 
 # %%
-PAPER_READY = True
-FORCE_EXPORT = True
+PAPER_READY = False
+MISLOC_ICON = True
+FORCE_EXPORT = False
 
 # %%
 SHOULD_EXPORT = PAPER_READY or FORCE_EXPORT
@@ -147,10 +148,17 @@ ampl_eta_mapping = [
 
 beta_offset_n_xs = [101, 201] + ([] if not PAPER_READY else [1001])
 
+
+if MISLOC_ICON:
+    print("Generating simplified misloc figure for paper icon") 
+    misloc_fig = MislocFig(sim, notable_only=True, show_individual=False, show_legend=False, show_confidence=False)
+else:
+    misloc_fig = MislocFig(sim, notable_only=(not PAPER_READY))
+
 main_figs: Dict[str, BaseFigure] = {
     "model_components": ComponentsFig(sim),
     "pop_resp": PopRespFig(sim, active=True),
-    "misloc": MislocFig(sim, notable_only=(not PAPER_READY)),
+    "misloc": misloc_fig,
 }
 
 appendix_figs: Dict[str, BaseFigure] = {
