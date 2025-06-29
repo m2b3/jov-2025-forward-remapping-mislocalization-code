@@ -1,8 +1,6 @@
 # Code for Berreby and Krishna, JoV 2025
 
-Public code release for "How forward remapping predicts perisaccadic biphasic mislocalization" (Journal of Vision 2025)
-
-[OSF Preprints link](https://osf.io/preprints/osf/bkaep_v2)
+Public code release for the Journal of Vision paper [How forward remapping predicts perisaccadic biphasic mislocalization (Berreby and Krishna, 2025)](https://doi.org/10.1167/jov.25.7.4).
 
 ## Prerequisites
 - [uv](https://github.com/astral-sh/uv) for dependency management - used ubiquitously.
